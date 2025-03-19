@@ -1,8 +1,8 @@
-import ShakkerAI from './index';
+import LiblibAI from './index';
 
-const client = new ShakkerAI({ apiKey: 'ak123', apiSecret: 'sk789', baseURL: 'https://openapi-test.shakker.ai' });
+const client = new LiblibAI({ apiKey: 'ak123', apiSecret: 'sk789', baseURL: 'https://openapi-test.shakker.ai' });
 async function main() {
-  const prediction = await client.run({
+  const prediction = await client.run('text2img', {
     input: {
       "generateParams": {
         "vaeId": "",

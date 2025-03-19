@@ -14,6 +14,6 @@
     "rootDir": ".",
     "sourceMap": true
   },
-  "include": ["*.ts", "types-test/**/*.ts"],
+  "include": ["*.ts", "lib/*.js", "types-test/**/*.ts"],
   "exclude": ["node_modules", "dist", "**/__tests__/*"]
 }

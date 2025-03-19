@@ -1,0 +1,32 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      dotenv:
+        specifier: ^16.3.1
+        version: 16.4.7
+      liblibai:
+        specifier: ^0.0.3
+        version: 0.0.3
+
+packages:
+
+  dotenv@16.4.7:
+    resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
+    engines: {node: '>=12'}
+
+  liblibai@0.0.3:
+    resolution: {integrity: sha512-Wt5sLPojeQoLB7WQAZGNA1ctnrL7k4y59AOn+J1DT5MtMoSuxyJdGA2OgI1vmNz8oXL+QemZx/Ri4G02zIEenQ==}
+    engines: {node: '>=14.0.0'}
+
+snapshots:
+
+  dotenv@16.4.7: {}
+
+  liblibai@0.0.3: {}

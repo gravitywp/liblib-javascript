@@ -272,7 +272,6 @@ class LiblibAI {
         method: 'POST',
         body: JSON.stringify({ generateUuid })
       })
-      console.log('wait poll result... ', result.data.generateStatus, [GenerateStatus.SUCCESS, GenerateStatus.FAILED, GenerateStatus.TIMEOUT].includes(result.data.generateStatus))
       if ([GenerateStatus.SUCCESS, GenerateStatus.FAILED, GenerateStatus.TIMEOUT].includes(result.data.generateStatus)) {
         break
       }

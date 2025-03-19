@@ -1,6 +1,6 @@
 {
   "name": "liblibai",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "Official TypeScript client for LiblibAI API",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -13,16 +13,15 @@
     }
   },
   "scripts": {
-    "build": "npm run build:cjs && npm run build:esm",
+    "build": "npm run build:cjs && npm run build:esm && npm run copy-lib",
     "build:cjs": "tsc -p tsconfig.json",
     "build:esm": "tsc -p tsconfig.esm.json",
+    "copy-lib": "mkdir -p dist/lib && cp -r lib/* dist/lib/",
     "test": "jest",
-    "lint": "eslint src --ext .ts",
-    "format": "prettier --write \"src/**/*.ts\"",
     "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint",
-    "preversion": "npm run lint",
-    "version": "npm run format && git add -A src",
+    "prepublishOnly": "npm test",
+    "preversion": "npm test",
+    "version": "git add -A",
     "postversion": "git push && git push --tags"
   },
   "keywords": [
@@ -49,7 +48,8 @@
     "typescript": "^5.0.0"
   },
   "files": [
-    "dist/**/*"
+    "dist/**/*",
+    "lib/**/*"
   ],
   "repository": {
     "type": "git",

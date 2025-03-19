@@ -1,4 +1,4 @@
-import hmacsha1 from "./lib/hmacsha1";
+import hmacsha1  from "./lib/hmacsha1";
 
 
 function generateRandomString(length: number): string {

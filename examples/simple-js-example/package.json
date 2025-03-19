@@ -1,0 +1,13 @@
+{
+  "name": "liblibai-js-example",
+  "version": "1.0.0",
+  "description": "Simple JavaScript example of using LiblibAI SDK for image generation",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "liblibai": "^0.0.3"
+  }
+}
