@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "es2018",
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "lib": ["es2018", "dom"],
+    "declarationDir": "./dist/types",
+    "rootDir": ".",
+    "sourceMap": true
+  },
+  "include": ["*.ts", "types-test/**/*.ts"],
+  "exclude": ["node_modules", "dist", "**/__tests__/*"]
+}

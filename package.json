@@ -1,0 +1,68 @@
+{
+  "name": "liblibai",
+  "version": "0.0.1",
+  "description": "Official TypeScript client for LiblibAI API",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/types/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "npm run build:cjs && npm run build:esm",
+    "build:cjs": "tsc -p tsconfig.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "test": "jest",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "keywords": [
+    "liblibai",
+    "api",
+    "client",
+    "typescript",
+    "javascript",
+    "ai",
+    "image-generation"
+  ],
+  "author": "LiblibAI",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.5.0",
+    "prettier": "^3.0.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.0.0"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com//gravitywp/liblib-javascript.git"
+  },
+  "bugs": {
+    "url": "https://github.com//gravitywp/liblib-javascript/issues"
+  },
+  "homepage": "https://github.com//gravitywp/liblib-javascript#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "sideEffects": false,
+  "dependencies": {
+  }
+}
