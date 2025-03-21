@@ -329,12 +329,20 @@ const submitResult = await client.submitText2Img({
 const generateUuid = submitResult.generateUuid;
 ```
 
-#### Check Generation Status
+#### Check Generation Status Manually
 
 Check the status of a generation:
 
 ```typescript
-const status = await client.getStatus(generateUuid);
+let status
+while (true) {
+    status = await client.getStatus(generateUuid);
+    if ([GenerateStatus.SUCCESS, GenerateStatus.FAILED, GenerateStatus.TIMEOUT].includes(status.generateStatus)) {
+        break;
+    }
+    await new Promise(resolve => setTimeout(resolve, 3000));
+}
+console.log(status)
 ```
 
 #### Wait for Results

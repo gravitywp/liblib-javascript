@@ -16,6 +16,7 @@ interface LiblibAIConfig {
   apiSecret: string;
   /** Optional base URL for the API (defaults to https://openapi.liblibai.cloud) */
   baseURL?: string;
+  interval?: number
 }
 
 /** Parameters for image generation */
@@ -105,6 +106,7 @@ class LiblibAI {
   private headers: Record<string, string>;
   private apiKey: string;
   private apiSecret: string;
+  private interval: number = 3000
 
   /**
    * Create a new LiblibAI client
@@ -122,6 +124,7 @@ class LiblibAI {
       'Content-Type': 'application/json',
       'User-Agent': '@liblibai/client'
     };
+    this.interval = config.interval || this.interval
   }
 
   public async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -272,11 +275,15 @@ class LiblibAI {
         method: 'POST',
         body: JSON.stringify({ generateUuid })
       })
+
+      // console.debug('polling result status', result.data.generateStatus)
+
       if ([GenerateStatus.SUCCESS, GenerateStatus.FAILED, GenerateStatus.TIMEOUT].includes(result.data.generateStatus)) {
         break
       }
 
-      await new Promise(resolve => setTimeout(resolve, 3000))
+
+      await new Promise(resolve => setTimeout(resolve, this.interval))
     }
     return result.data
   }
@@ -284,14 +291,15 @@ class LiblibAI {
   async waitAppResult(generateUuid: string): Promise<Prediction> {
     let result;
     while (true) {
-      result = await this.request<Response>('/api/generate/comfyui/status', {
+      result = await this.request<Response>('/api/generate/comfy/status', {
         method: 'POST',
         body: JSON.stringify({ generateUuid })
       })
+      // console.debug('polling result status', result.data.generateStatus)
       if ([GenerateStatus.SUCCESS, GenerateStatus.FAILED, GenerateStatus.TIMEOUT].includes(result.data.generateStatus)) {
         return result.data
       }
-      await new Promise(resolve => setTimeout(resolve, 3000))
+      await new Promise(resolve => setTimeout(resolve, this.interval))
     }
   }
 
