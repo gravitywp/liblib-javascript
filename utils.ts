@@ -1,6 +1,11 @@
-import hmacsha1  from "./lib/hmacsha1";
+const hmacsha1 = require("./lib/hmacsha1") as (key: string, data: string) => string;
 
-
+/**
+ * Generates a random string of a specified length.
+ * 
+ * @param length The length of the string to generate.
+ * @returns A random string of the specified length.
+ */
 function generateRandomString(length: number): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
@@ -13,6 +18,14 @@ function generateRandomString(length: number): string {
   return result;
 }
 
+/**
+ * Generates a URL signature.
+ * 
+ * @param url The URL to sign.
+ * @param API_KEY The API key to use for signing.
+ * @param API_SECRET The API secret to use for signing.
+ * @returns An object containing the signature, timestamp, and signature nonce.
+ */
 const urlSignature = (url: string, API_KEY: string, API_SECRET: string) => {
   if (!url) return;
   const timestamp = Date.now(); // 当前时间戳
@@ -33,8 +46,15 @@ const urlSignature = (url: string, API_KEY: string, API_SECRET: string) => {
     signatureNonce,
   };
 };
-// 例子：原本查询生图进度接口是 /api/generate/webui/status
-// 加密后，url 就变更为 /api/generate/webui/status?AccessKey={YOUR_ACCESS_KEY}&Signature={签名}&Timestamp={时间戳}&SignatureNonce={随机字符串}
+
+/**
+ * Generates a signed URL.
+ * 
+ * @param url The URL to sign.
+ * @param API_KEY The API key to use for signing.
+ * @param API_SECRET The API secret to use for signing.
+ * @returns The signed URL.
+ */
 export const getSignedUrl = (url: string, API_KEY: string, API_SECRET: string) => {
   const result = urlSignature(url, API_KEY, API_SECRET);
   if (!result) {

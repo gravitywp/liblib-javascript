@@ -1,15 +1,16 @@
 {
   "name": "liblibai",
-  "version": "0.0.6",
+  "version": "0.0.10",
   "description": "Official TypeScript client for LiblibAI API",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/types/index.d.ts",
+  "type": "commonjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/types/index.d.ts"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "scripts": {
@@ -37,6 +38,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.11",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.0.0",

@@ -10,7 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "lib": ["es2018", "dom"],
-    "declarationDir": "./dist/types",
+    "declarationDir": "./dist/",
     "rootDir": ".",
     "sourceMap": true
   },
