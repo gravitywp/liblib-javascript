@@ -289,6 +289,58 @@ const result = await client.runComfy({
 });
 ```
 
+### File Upload
+
+The SDK provides methods to upload files that can be used in generation tasks.
+
+#### Upload a File
+
+Upload a file to use in image generation tasks:
+
+```typescript
+// In Node.js environment using Buffer
+const fs = require('fs');
+const path = require('path');
+
+// Read a file into a Buffer
+const imagePath = path.join(__dirname, 'my_image.jpg');
+const fileBuffer = fs.readFileSync(imagePath);
+
+// Upload the file with a custom filename
+const uploadedUrl = await client.uploadFile(fileBuffer, 'my_uploaded_image.jpg');
+console.log(`Uploaded file URL: ${uploadedUrl}`);
+
+// Use the uploaded file in an img2img task
+const result = await client.img2img({
+  generateParams: {
+    prompt: "Transform this into a beautiful oil painting",
+    // Other parameters...
+    sourceImage: uploadedUrl, // Use the uploaded image URL here
+    ...
+  }
+});
+```
+
+```typescript
+// In browser environment using File/Blob
+// Assuming you have a file input element in your HTML
+const fileInput = document.getElementById('fileInput');
+fileInput.addEventListener('change', async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  try {
+    // Upload the file
+    const uploadedUrl = await client.uploadFile(file);
+    console.log(`Uploaded file URL: ${uploadedUrl}`);
+    
+    // You can now use uploadedUrl in other API calls
+  } catch (error) {
+    console.error('Error uploading file:', error);
+  }
+});
+```
+
 ### Low-level API Methods
 
 #### Submit a Request

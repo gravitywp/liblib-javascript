@@ -19,30 +19,40 @@ interface LiblibAIConfig {
   interval?: number
 }
 
+interface UploadSignature {
+  key: string
+  policy: string
+  postUrl: string
+  xossDate: string
+  xossExpires: number
+  xossSignature: string
+  xossCredential: string
+  xossSignatureVersion: string
+}
 /** Parameters for image generation */
-interface Request {
+export interface Request {
   /** Text description of the image to generate */
   [key: string]: any;
 }
 
 /** Response from image generation */
-interface Response {
+export interface Response {
   data: Prediction;
   code: number
   msg: string
 }
 
-interface SubmitResult {
+export interface SubmitResult {
   generateUuid: string
 }
 
-interface PredictionImage {
+export interface PredictionImage {
   imageUrl: string
   seed: number
   auditStatus: number
 }
 
-interface PredictionVideo {
+export interface PredictionVideo {
   videoUrl: string
   coverPath: string
   nodeId: string
@@ -50,7 +60,7 @@ interface PredictionVideo {
   auditStatus: number
 }
 
-interface Prediction {
+export interface Prediction {
   generateUuid: string
   generateStatus: number
   percentCompleted: number
@@ -185,12 +195,15 @@ class LiblibAI {
     return '/api/generate/webui/text2img'
   }
 
-  async run(task: string, request: Request): Promise<Prediction> {
+  async run(task: 'run_comfy' | 'text2img' | 'img2img' | 'text2img_ultra' | 'img2img_ultra', request: Request): Promise<Prediction> {
     const endpoint = await this.taskToEndpoint(task)
     const resp: { data: SubmitResult } = await this.request(endpoint, {
       method: 'POST',
       body: JSON.stringify(request),
     });
+    if (resp.data === null) {
+      throw new LiblibAIError('Failed to submit task', 500, resp)
+    }
     const generateUuid = resp.data.generateUuid
     let prediction
     if (task === 'run_comfy') {
@@ -201,12 +214,15 @@ class LiblibAI {
     return prediction
   }
 
-  async submit(task: string, request: Request): Promise<SubmitResult> {
+  async submit(task: 'run_comfy' | 'text2img' | 'img2img' | 'text2img_ultra' | 'img2img_ultra', request: Request): Promise<SubmitResult> {
     const endpoint = await this.taskToEndpoint(task)
     const resp = await this.request<{ data: SubmitResult }>(endpoint, {
       method: 'POST',
       body: JSON.stringify(request),
     });
+    if (resp.data === null) {
+      throw new LiblibAIError('Failed to submit task', 500, resp)
+    }
     return resp.data
   }
 
@@ -248,6 +264,62 @@ class LiblibAI {
 
   async submitRunComfy(request: Request): Promise<SubmitResult> {
     return this.submit('run_comfy', request)
+  }
+
+  async signFile(filename: string): Promise<UploadSignature> {
+    const extension = filename.split('.')[1]
+    const name = filename.split('.')[0]
+    const resp = await this.request<{ data: UploadSignature }>(
+      '/api/generate/upload/signature',
+      {
+        method: 'POST',
+        body: JSON.stringify({ name, extension })
+      }
+    )
+
+    const signData = resp.data
+
+    return signData
+  }
+
+  async uploadFile(file: File | Blob | Buffer, filename?: string): Promise<string> {
+    let blob;
+    if (file instanceof Blob) {
+      filename = filename || (file as File).name || `blob_${Date.now()}`;
+      blob = file;
+    } else if (Buffer.isBuffer(file)) {
+      if (!filename) {
+        throw new Error("Filename is required for Buffer");
+      }
+      const bytes = new Uint8Array(file);
+      blob = new Blob([bytes], {
+        type: `image/${filename.split('.')[1]}`,
+      });
+    } else {
+      throw new Error("Invalid file argument, must be a Blob, File or Buffer");
+    }
+    const signData = await this.signFile(filename)
+    const formData = new FormData()
+
+    formData.append('x-oss-signature', signData.xossSignature)
+    formData.append('x-oss-date', signData.xossDate)
+    formData.append('x-oss-signature-version', signData.xossSignatureVersion)
+    formData.append('policy', signData.policy)
+    formData.append('key', signData.key)
+    formData.append('x-oss-credential', signData.xossCredential)
+    formData.append('x-oss-expires', signData.xossExpires.toString())
+    formData.append('file', blob, filename)
+    const resp = await fetch(
+      signData.postUrl,
+      {
+        method: 'POST',
+        body: formData
+      }
+    )
+    if (!resp.ok) {
+      throw new LiblibAIError('Failed to upload file', resp.status, await resp.text())
+    }
+    return new URL(signData.key, signData.postUrl).toString()
   }
 
   //1 for pending, 2 for processing, 3 for genearted, 4 for auditing, 5 for success, 6 for failed , 7 for timeout
